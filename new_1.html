@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Simple Firebase Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotSync - Smart Parking Solutions</title>
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --warning: #ffbe0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-left: 20px;
+        }
+        
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .btn {
+            text-align: center;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: #2a75e8;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7029d5;
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 24px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Search Form */
+        .search-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .form-col {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* Recent Searches */
+        .recent-searches {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 36px;
+            color: var(--dark);
+        }
+
+        .search-history {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .search-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .search-item:hover {
+            transform: translateY(-5px);
+            background-color: #f0f9ff;
+        }
+
+        .search-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #eef4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .search-details {
+            flex: 1;
+        }
+
+        .search-location {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .search-meta {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-time {
+            margin-right: 15px;
+        }
+        
+        /* Venues */
+        .venues {
+            padding: 80px 0;
+            background-color: var(--light);
+        }
+        
+        .venues-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .venue-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .venue-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .venue-img {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .venue-info {
+            padding: 20px;
+        }
+        
+        .venue-title {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .venue-location {
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .venue-location i {
+            margin-right: 5px;
+        }
+        
+        .venue-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .venue-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .venue-rating {
+            color: var(--warning);
+        }
+        
+        /* Events */
+        .events {
+            padding: 80px 0;
+        }
+        
+        .event-card {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+          
+        }
+        
+        .event-img {
+            width: 30%;
+            min-width: 200px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+        }
+       
+        
+        .event-info {
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .event-date {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .event-title {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .event-location {
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-description {
+            margin-bottom: 20px;
+        }
+        
+        /* App Download */
+        .app-download {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .app-title {
+            margin-bottom: 20px;
+            font-size: 36px;
+        }
+        
+        .app-description {
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .app-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .app-btn {
+            display: flex;
+            align-items: center;
+            background-color: black;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        
+        .app-btn i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .app-btn span {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        
+        .app-btn small {
+            font-size: 12px;
+        }
+        
+        .app-btn strong {
+            font-size: 18px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: 10px;
+        }
+        
+        .footer-link a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                margin-top: 20px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-item {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .event-card {
+                flex-direction: column;
+            }
+            
+            .event-img {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <div class="logo-icon">🅿️</div>
+                    Spot<span>Sync</span>
+                </a>
+                <button class="hamburger" aria-label="Toggle menu">☰</button>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Venues</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Events</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">How It Works</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+                    <li class="nav-item"><a href="#" class="btn">Sign In</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Book Your Parking Spot in Seconds</h1>
+            <p>Reserve convenient parking spaces at malls, theaters, events, and more across Hyderabad. Save time and avoid the stress of finding parking.</p>
+            <a href="#" class="btn btn-secondary">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Search Form -->
+    <div class="container">
+        <form id="parkingSearchForm" class="search-form">
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label class="form-label" for="location">Venue</label>
+                        <input type="text" id="location" class="form-control" placeholder="Enter venue name">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label class="form-label" for="date">Date</label>
+                        <input type="date" id="date" class="form-control">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label class="form-label" for="time">Time</label>
+                        <input type="time" id="time" class="form-control">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label class="form-label" for="duration">Duration (hours)</label>
+                        <input type="number" id="duration" placeholder="Duration" class="form-control" min="1" max="12" >
+                    </div>
+                </div>
+            </div>
+            <a href="http://10.1.13.5:3000/asal.html" target="_self" id="find-Parking-Btn" type="button" class="btn" style="width: 100% ;">Find Parking</a>
+        </form>
+    </div>
+
+    <!-- Recently Searched Places -->
+    <section class="recent-searches">
+        <div class="container">
+            <h2 class="section-title">Recently Searched Places</h2>
+            <div class="search-history">
+                <div class="search-item">
+                    <div class="search-icon">🎬</div>
+                    <div class="search-details">
+                        <div class="search-location">PVR INORBIT Mall</div>
+                        <div class="search-meta">
+                            <span class="search-time">Today, 3:30 PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-item">
+                    <div class="search-icon">🛍️</div>
+                    <div class="search-details">
+                        <div class="search-location">GVK One Mall</div>
+                        <div class="search-meta">
+                            <span class="search-time">Yesterday, 5:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-item">
+                    <div class="search-icon">🏟️</div>
+                    <div class="search-details">
+                        <div class="search-location">Rajiv Gandhi Cricket Stadium</div>
+                        <div class="search-meta">
+                            <span class="search-time">Apr 23, 2025</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-item">
+                    <div class="search-icon">🏨</div>
+                    <div class="search-details">
+                        <div class="search-location">Hyderabad International Convention Centre</div>
+                        <div class="search-meta">
+                            <span class="search-time">Apr 21, 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venues -->
+    <section class="venues">
+        <div class="container">
+            <h2 class="section-title">Popular Venues in Hyderabad</h2>
+            <div class="venues-grid">
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://www.nexusselecttrust.com/resources/assets/images/hyderabad/banner1.jpg');" aria-label="Forum Sujana Mall"></div>
+                    <div class="venue-info">
+                        <h3 class="venue-title">Nexus Mall</h3>
+                        <div class="venue-location">📍 Kukatpally, Hyderabad</div>
+                        <div class="venue-details">
+                            <div class="venue-price">₹30/hour</div>
+                            <div class="venue-rating">★★★★☆ 4.5</div>
+                        </div>
+                        <a href="http://10.1.13.5:3000/Nexus.html" class="btn" style="width: 100%;">Book Now</a>
+                    </div>
+                </div>
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://www.sacnilk.com/image/bunnyimagenews.php?newsid=1000020256');" aria-label="AMB Cinemas"></div>
+                    <div class="venue-info">
+                        <h3 class="venue-title">AMB Cinemas</h3>
+                        <div class="venue-location">📍 Gachibowli, Hyderabad</div>
+                        <div class="venue-details">
+                            <div class="venue-price">₹30/hour</div>
+                            <div class="venue-rating">★★★★★ 4.8</div>
+                        </div>
+                        <a href="http://10.3.8.65:3000/AMB.html" target="_self" class="btn" style="width: 100%;">Book Now</a>
+                    </div>
+                </div>
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Imax_theater_hyderabad.jpg/330px-Imax_theater_hyderabad.jpg');" aria-label="Prasads Multiplex"></div>
+                    <div class="venue-info">
+                        <h3 class="venue-title">Prasads Multiplex</h3>
+                        <div class="venue-location">📍 Necklace Road, Hyderabad</div>
+                        <div class="venue-details">
+                            <div class="venue-price">₹30/hour</div>
+                            <div class="venue-rating">★★★★☆ 4.3</div>
+                        </div>
+                        <a href="#" class="btn" style="width: 100%;">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events -->
+    <section class="events">
+        <div class="container">
+            <h2 class="section-title">Upcoming Events in Hyderabad</h2>
+            <div class="event-card">
+                <div class="event-img" style="background-image: url('https://www.areafourindustries.com/getmedia/35e0b4fa-993b-49f2-9497-770976221243/@b2pan-in-5_2.jpg.aspx?style=');" aria-label="Sunburn Concert"></div>
+                <div class="event-info">
+                    <span class="event-date">MAY 15, 2025</span>
+                    <h3 class="event-title">Sunburn Arena Music Festival</h3>
+                    <div class="event-location">📍 Gachibowli Stadium, Hyderabad</div>
+                    <p class="event-description">Reserve your parking spot for the biggest electronic music festival in Hyderabad. Limited spaces available at ₹50/hour!</p>
+                    <a href="#" class="btn">Book Event Parking</a>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-img" style="background-image: url('https://pitch-report.com/wp-content/uploads/2024/12/Rajiv-Gandhi-International-Stadium-Uppal-Hyderabad-%E2%80%93-Pitch-Report-1024x536.webp');" aria-label="IPL Match"></div>
+                <div class="event-info">
+                    <span class="event-date">MAY 22, 2025</span>
+                    <h3 class="event-title">IPL: Sunrisers Hyderabad vs Chennai Super Kings</h3>
+                    <div class="event-location">📍 Rajiv Gandhi Cricket Stadium, Hyderabad</div>
+                    <p class="event-description">Secure convenient parking for the most anticipated cricket match of the season at just ₹50/hour.</p>
+                    <a href="http://10.3.8.65:3000/Uppal.html" class="btn">Book Event Parking</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Download -->
+    <section class="app-download">
+        <div class="container">
+            <h2 class="app-title">Download the SpotSync App</h2>
+            <p class="app-description">Get real-time parking availability across Hyderabad, exclusive mobile discounts, and manage your bookings on the go.</p>
+            <div class="app-buttons">
+                <a href="#" class="app-btn">
+                    <i>📱</i>
+                    <span>
+                        <small>Download on the</small>
+                        <strong>App Store</strong>
+                    </span>
+                </a>
+                <a href="#" class="app-btn">
+                    <i>🤖</i>
+                    <span>
+                        <small>Get it on</small>
+                        <strong>Google Play</strong>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>SpotSync</h3>
+                    <p>Making parking easy and stress-free at your favorite venues and events across Hyderabad.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <span aria-hidden="true">f</span>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <span aria-hidden="true">t</span>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <span aria-hidden="true">in</span>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <span aria-hidden="true">ig</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">About Us</a></li>
+                        <li class="footer-link"><a href="#">Careers</a></li>
+                        <li class="footer-link"><a href="#">Blog</a></li>
+                        <li class="footer-link"><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Contact Us</a></li>
+                        <li class="footer-link"><a href="#">Help Center</a></li>
+                        <li class="footer-link"><a href="#">FAQs</a></li>
+                        <li class="footer-link"><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Partner With Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Venue Owners</a></li>
+                        <li class="footer-link"><a href="#">Event Organizers</a></li>
+                        <li class="footer-link"><a href="#">Business Solutions</a></li>
+                        <li class="footer-link"><a href="#">Affiliates</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 SpotSync. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple JavaScript for mobile menu toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Current date for the date picker
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('input[type="date"]').setAttribute('min', today);
+        document.querySelector('input[type="date"]').value = today;
+        
+        // Set up the Find Parking button to navigate to second page
+        document.getElementById('findParkingBtn').addEventListener('click', function() {
+            // Get form values
+            const location = document.getElementById('location').value || 'AMB Cinemas';
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value || '12:00';
+            const duration = document.getElementById('duration').value || '3';
+            
+            // Store the values in sessionStorage
+            sessionStorage.setItem('parkingLocation', location);
+            sessionStorage.setItem('parkingDate', date);
+            sessionStorage.setItem('parkingTime', time);
+            sessionStorage.setItem('parkingDuration', duration);
+            
+            // Navigate to the second page
+            window.location.href = 'parking-availability.html';
+        });
+    </script>
+        <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAmP50WQbgnytcHnyeH60oWdAg0ICIlPZw",
+    authDomain: "spotsync-ad692.firebaseapp.com",
+    projectId: "spotsync-ad692",
+    storageBucket: "spotsync-ad692.firebasestorage.app",
+    messagingSenderId: "469339516150",
+    appId: "1:469339516150:web:73ba86647b769dd46210d7",
+    measurementId: "G-FERVGLH6K9"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+<script type="module">
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  
+    // Add a document to Firestore
+    async function addUser() {
+      try {
+        const docRef = await addDoc(collection(db, "users"), {
+          name: "Alice",
+          email: "alice@example.com"
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+  
+    addUser();
+  </script>
+   
+</body>
+</html>

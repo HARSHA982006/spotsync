@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <link rel="stylesheet" href="asal.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Document</title>
+</head>
+<body>
+ 
+<script>
+// Assuming you have a "Find Parking" button with an id of "find-parking-btn"
+document.getElementById('find-parking-btn')?.addEventListener('click', function() {
+    // Get the main content container where the parking interface will be displayed
+    const mainContent = document.getElementById('main-content');
+    
+    if (!mainContent) {
+        console.error('Main content container not found');
+        return;
+    }
+    
+    // Clear the current content and show the parking interface
+    mainContent.innerHTML = generateParkingInterface();
+    
+    // Initialize all the interactive elements after the content is loaded
+    initializeParkingInterface();
+});
+
+// Function to generate the HTML for the parking interface
+function generateParkingInterface() {
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+    
+    return `3
+    <section class="venue-details">
+        <div class="container">
+            <div class="venue-header">
+                <div class="venue-info">
+                    <h1>AMB Cinemas</h1>
+                    <div class="venue-meta">
+                        <span>📍 Gachibowli, Hyderabad</span>
+                    </div>
+                    <div class="venue-meta">
+                        <span>⭐ 4.8 (523 reviews)</span>
+                    </div>
+                    <div class="venue-stats">
+                        <div class="stat-item stat-available">45 Available</div>
+                        <div class="stat-item stat-occupied">28 Occupied</div>
+                        <div class="stat-item stat-price">₹30/hour</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Time Selector -->
+            <div class="time-selector">
+                <div class="time-slot">9:00 AM</div>
+                <div class="time-slot">10:00 AM</div>
+                <div class="time-slot">11:00 AM</div>
+                <div class="time-slot selected">12:00 PM</div>
+                <div class="time-slot">1:00 PM</div>
+                <div class="time-slot">2:00 PM</div>
+                <div class="time-slot">3:00 PM</div>
+                <div class="time-slot">4:00 PM</div>
+            </div>
+            
+            <div class="parking-section">
+                <div class="section-header">
+                    <h2 class="section-title">Available Parking Slots</h2>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color color-available"></div>
+                            <span>Available</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color color-occupied"></div>
+                            <span>Occupied</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color color-reserved"></div>
+                            <span>Reserved</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color color-disabled"></div>
+                            <span>EV Vehicles</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parking-map">
+                    <!-- Level 1 -->
+                    <div class="parking-level">
+                        <div class="level-header">
+                            <div class="level-title">Ground Floor (Level 1)</div>
+                            <div class="level-availability">18 slots available</div>
+                        </div>
+                        <div class="parking-grid">
+                            <div class="parking-slot available" data-slot-id="A1">
+                                <div class="slot-number">A1</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="A2">
+                                <div class="slot-number">A2</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="A3">
+                                <div class="slot-number">A3</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot disabled" data-slot-id="A4">
+                                <div class="slot-number">A4</div>
+                                <div class="slot-type">EV Vehicles</div>
+                                <div class="disabled-icon">♿</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="A5">
+                                <div class="slot-number">A5</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="A6">
+                                <div class="slot-number">A6</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="A7">
+                                <div class="slot-number">A7</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="A8">
+                                <div class="slot-number">A8</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot reserved" data-slot-id="A9">
+                                <div class="slot-number">A9</div>
+                                <div class="slot-type">Premium</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="A10">
+                                <div class="slot-number">A10</div>
+                                <div class="slot-type">Premium</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="B1">
+                                <div class="slot-number">B1</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="B2">
+                                <div class="slot-number">B2</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="B3">
+                                <div class="slot-number">B3</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="B4">
+                                <div class="slot-number">B4</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot reserved" data-slot-id="B5">
+                                <div class="slot-number">B5</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="B6">
+                                <div class="slot-number">B6</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Level 2 -->
+                    <div class="parking-level">
+                        <div class="level-header">
+                            <div class="level-title">Level 2</div>
+                            <div class="level-availability">27 slots available</div>
+                        </div>
+                        <div class="parking-grid">
+                            <div class="parking-slot occupied" data-slot-id="C1">
+                                <div class="slot-number">C1</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C2">
+                                <div class="slot-number">C2</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C3">
+                                <div class="slot-number">C3</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C4">
+                                <div class="slot-number">C4</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="C5">
+                                <div class="slot-number">C5</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C6">
+                                <div class="slot-number">C6</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C7">
+                                <div class="slot-number">C7</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot disabled" data-slot-id="C8">
+                                <div class="slot-number">C8</div>
+                                <div class="slot-type">EV Vehicles</div>
+                                <div class="disabled-icon"></div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C9">
+                                <div class="slot-number">C9</div>
+                                <div class="slot-type">Premium</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="C10">
+                                <div class="slot-number">C10</div>
+                                <div class="slot-type">Premium</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="D1">
+                                <div class="slot-number">D1</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="D2">
+                                <div class="slot-number">D2</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot reserved" data-slot-id="D3">
+                                <div class="slot-number">D3</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="D4">
+                                <div class="slot-number">D4</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot occupied" data-slot-id="D5">
+                                <div class="slot-number">D5</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                            <div class="parking-slot available" data-slot-id="D6">
+                                <div class="slot-number">D6</div>
+                                <div class="slot-type">Standard</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Panel -->
+            <div class="booking-panel">
+                <h2 class="section-title" style="margin-bottom: 20px;">Book Your Spot</h2>
+                
+                <!-- Vehicle Information Section -->
+                <div class="vehicle-info">
+                    <h3 style="margin-bottom: 15px;">Vehicle Information</h3>
+                    
+                    <div class="vehicle-type-options">
+                        <div class="vehicle-type selected" id="car-option" data-vehicle-type="car">
+                            <div class="vehicle-icon">🚗</div>
+                            <div class="vehicle-label">Car</div>
+                        </div>
+                        <div class="vehicle-type" id="bike-option" data-vehicle-type="bike">
+                            <div class="vehicle-icon">🏍️</div>
+                            <div class="vehicle-label">Bike</div>
+                        </div>
+                    </div>
+                    
+                    <div class="number-plate">
+                        <label for="plate-number" class="input-label">Vehicle Number Plate</label>
+                        <input type="text" id="plate-number" class="number-plate-input" placeholder="Enter vehicle number (e.g., TS 09 AB 1234)" maxlength="15">
+                    </div>
+                </div>
+                
+                <div class="booking-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">AMB Cinemas, Gachibowli</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">${formattedDate}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value">12:00 PM - 1:00 PM (1 hour)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Selected Spot</div>
+                        <div class="detail-value" id="selected-slot-display">Not selected</div>
+                    </div>
+                </div>
+                
+                <div class="price-summary">
+                    <div class="price-row">
+                        <div>Parking Fee (1 hour @ ₹30/hour)</div>
+                        <div>₹30</div>
+                    </div>
+                    <div class="price-row">
+                        <div>Convenience Fee</div>
+                        <div>₹5</div>
+                    </div>
+                    <div class="price-row">
+                        <div>GST (18%)</div>
+                        <div>₹6.3</div>
+                    </div>
+                    <div class="price-total">
+                        <div>Total</div>
+                        <div id="total-price">₹41.3</div>
+                    </div>
+                </div>
+                
+                <div class="booking-cta">
+                    <button class="btn" id="confirm-booking-btn">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    `;
+}
+</script>
+
+<section class="venue-details">
+    <div class="container">
+        <div class="venue-header">
+            <div class="venue-info">
+                <h1>AMB Cinemas</h1>
+                <div class="venue-meta">
+                    <span>📍 Gachibowli, Hyderabad</span>
+                </div>
+                <div class="venue-meta">
+                    <span>⭐ 4.8 (523 reviews)</span>
+                </div>
+                <div class="venue-stats">
+                    <div class="stat-item stat-available">45 Available</div>
+                    <div class="stat-item stat-occupied">28 Occupied</div>
+                    <div class="stat-item stat-price">₹30/hour</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Time Selector -->
+        <div class="time-selector">
+            <div class="time-slot">9:00 AM</div>
+            <div class="time-slot">10:00 AM</div>
+            <div class="time-slot">11:00 AM</div>
+            <div class="time-slot selected">12:00 PM</div>
+            <div class="time-slot">1:00 PM</div>
+            <div class="time-slot">2:00 PM</div>
+            <div class="time-slot">3:00 PM</div>
+            <div class="time-slot">4:00 PM</div>
+        </div>
+        
+        <div class="parking-section">
+            <div class="section-header">
+                <h2 class="section-title">Available Parking Slots</h2>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color color-available"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color color-occupied"></div>
+                        <span>Occupied</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color color-reserved"></div>
+                        <span>Reserved</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color color-disabled"></div>
+                        <span>EV Vehicles</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="parking-map">
+                <!-- Level 1 -->
+                <div class="parking-level">
+                    <div class="level-header">
+                        <div class="level-title">Ground Floor (Level 1)</div>
+                        <div class="level-availability">18 slots available</div>
+                    </div>
+                    <div class="parking-grid">
+                        <div class="parking-slot available" data-slot-id="A1">
+                            <div class="slot-number">A1</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="A2">
+                            <div class="slot-number">A2</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="A3">
+                            <div class="slot-number">A3</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot disabled" data-slot-id="A4">
+                            <div class="slot-number">A4</div>
+                            <div class="slot-type">EV Vehicles</div>
+                            <div class="disabled-icon"></div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="A5">
+                            <div class="slot-number">A5</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="A6">
+                            <div class="slot-number">A6</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="A7">
+                            <div class="slot-number">A7</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="A8">
+                            <div class="slot-number">A8</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot reserved" data-slot-id="A9">
+                            <div class="slot-number">A9</div>
+                            <div class="slot-type">Premium</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="A10">
+                            <div class="slot-number">A10</div>
+                            <div class="slot-type">Premium</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="B1">
+                            <div class="slot-number">B1</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="B2">
+                            <div class="slot-number">B2</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="B3">
+                            <div class="slot-number">B3</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="B4">
+                            <div class="slot-number">B4</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot reserved" data-slot-id="B5">
+                            <div class="slot-number">B5</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="B6">
+                            <div class="slot-number">B6</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Level 2 -->
+                <div class="parking-level">
+                    <div class="level-header">
+                        <div class="level-title">Level 2</div>
+                        <div class="level-availability">27 slots available</div>
+                    </div>
+                    <div class="parking-grid">
+                        <div class="parking-slot occupied" data-slot-id="C1">
+                            <div class="slot-number">C1</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C2">
+                            <div class="slot-number">C2</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C3">
+                            <div class="slot-number">C3</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C4">
+                            <div class="slot-number">C4</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="C5">
+                            <div class="slot-number">C5</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C6">
+                            <div class="slot-number">C6</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C7">
+                            <div class="slot-number">C7</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot disabled" data-slot-id="C8">
+                            <div class="slot-number">C8</div>
+                            <div class="slot-type">EV Vehicles</div>
+                            <div class="disabled-icon"></div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C9">
+                            <div class="slot-number">C9</div>
+                            <div class="slot-type">Premium</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="C10">
+                            <div class="slot-number">C10</div>
+                            <div class="slot-type">Premium</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="D1">
+                            <div class="slot-number">D1</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="D2">
+                            <div class="slot-number">D2</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot reserved" data-slot-id="D3">
+                            <div class="slot-number">D3</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="D4">
+                            <div class="slot-number">D4</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot occupied" data-slot-id="D5">
+                            <div class="slot-number">D5</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                        <div class="parking-slot available" data-slot-id="D6">
+                            <div class="slot-number">D6</div>
+                            <div class="slot-type">Standard</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Booking Panel -->
+        <div class="booking-panel">
+            <h2 class="section-title" style="margin-bottom: 20px;">Book Your Spot</h2>
+            
+            <!-- Vehicle Information Section -->
+            <div class="vehicle-info">
+                <h3 style="margin-bottom: 15px;">Vehicle Information</h3>
+                
+                <div class="vehicle-type-options">
+                    <div class="vehicle-type selected" id="car-option" data-vehicle-type="car">
+                        <div class="vehicle-icon">🚗</div>
+                        <div class="vehicle-label">Car</div>
+                    </div>
+                    <div class="vehicle-type" id="bike-option" data-vehicle-type="bike">
+                        <div class="vehicle-icon">🏍️</div>
+                        <div class="vehicle-label">Bike</div>
+                    </div>
+                </div>
+                
+                <div class="number-plate">
+                    <label for="plate-number" class="input-label">Vehicle Number Plate</label>
+                    <input type="text" id="plate-number" class="number-plate-input" placeholder="Enter vehicle number (e.g., TS 09 AB 1234)" maxlength="15">
+                </div>
+            </div>
+            
+            <div class="booking-details">
+                <div class="detail-item">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">AMB Cinemas, Gachibowli</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value" id="current-date"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Time</div>
+                    <div class="detail-value">12:00 PM - 1:00 PM (1 hour)</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Selected Spot</div>
+                    <div class="detail-value" id="selected-slot-display">Not selected</div>
+                </div>
+            </div>
+            
+            <div class="price-summary">
+                <div class="price-row">
+                    <div>Parking Fee (1 hour @ ₹30/hour)</div>
+                    <div>₹30</div>
+                </div>
+                <div class="price-row">
+                    <div>Convenience Fee</div>
+                    <div>₹5</div>
+                </div>
+                <div class="price-row">
+                    <div>GST (18%)</div>
+                    <div>₹6.3</div>
+                </div>
+                <div class="price-total">
+                    <div>Total</div>
+                    <div id="total-price">₹41.3</div>
+                </div>
+            </div>
+            
+            <div class="booking-cta">
+                <button class="btn" id="confirm-booking-btn">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Update current date in the booking details
+document.addEventListener('DOMContentLoaded', function() {
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+    const dateElement = document.getElementById('current-date');
+    if (dateElement) {
+        dateElement.textContent = formattedDate;
+    }
+});
+
+// Initialize all interactive elements after the parking interface is loaded
+function initializeParkingInterface() {
+    // Track the currently selected slot
+    let selectedSlot = null;
+
+    // Add interactive functionality for slot selection
+    document.querySelectorAll('.parking-slot.available').forEach(slot => {
+        slot.addEventListener('click', function() {
+            // Remove previously selected slot highlight
+            if (selectedSlot) {
+                selectedSlot.classList.remove('selected-slot');
+            }
+            
+            // Highlight selected slot
+            this.classList.add('selected-slot');
+            selectedSlot = this;
+            
+            // Update booking panel with selected slot info
+            const slotNumber = this.querySelector('.slot-number').textContent;
+            const slotType = this.querySelector('.slot-type').textContent;
+            document.getElementById('selected-slot-display').textContent = `${slotNumber} (${slotType})`;
+            
+            // Update the price based on slot type
+            updatePriceSummary(slotType);
+        });
+    });
+    
+    // Add functionality for time slot selection
+    document.querySelectorAll('.time-slot').forEach(timeSlot => {
+        timeSlot.addEventListener('click', function() {
+            document.querySelectorAll('.time-slot').forEach(ts => {
+                ts.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Update time in booking details
+            const selectedTime = this.textContent;
+            const endTime = getEndTime(selectedTime);
+            document.querySelectorAll('.detail-value')[2].textContent = 
+                `${selectedTime} - ${endTime} (1 hour)`;
+        });
+    });
+    
+    // Vehicle type selection
+    document.querySelectorAll('.vehicle-type').forEach(type => {
+        type.addEventListener('click', function() {
+            document.querySelectorAll('.vehicle-type').forEach(t => {
+                t.classList.remove('selected');
+            });
+            
+            this.classList.add('selected');
+        });
+    });
+    // Validate number plate input
+    const plateNumberInput = document.getElementById('plate-number');
+    if (plateNumberInput) {
+        plateNumberInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+    }
+    
+    // Handle the booking confirmation button
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            const vehicleNumber = document.getElementById('plate-number')?.value;
+            if (!vehicleNumber) {
+                alert('Please enter your vehicle number plate');
+                return;
+            }
+            
+            const selectedSlotInfo = document.getElementById('selected-slot-display')?.textContent;
+            if (!selectedSlotInfo || selectedSlotInfo === 'Not selected') {
+                alert('Please select a parking slot');
+                return;
+            }
+            
+            const selectedTime = document.querySelectorAll('.detail-value')[2]?.textContent;
+            const selectedVehicleType = document.querySelector('.vehicle-type.selected .vehicle-label')?.textContent;
+            
+            if (!selectedTime || !selectedVehicleType) {
+                alert('Missing booking information');
+                return;
+            }
+            
+            alert(`Booking confirmed!\nVehicle: ${selectedVehicleType} (${vehicleNumber})\nSlot: ${selectedSlotInfo}\nTime: ${selectedTime}`);
+        });
+    }
+}
+
+// Helper function to calculate end time
+function getEndTime(startTime) {
+    const timeRegex = /(\d+):(\d+)\s*(AM|PM)/i;
+    const match = startTime.match(timeRegex);
+    
+    if (!match) return "Invalid time";
+    
+    let hours = parseInt(match[1]);
+    const minutes = match[2];
+    const period = match[3].toUpperCase();
+    
+    // Convert to 24-hour format for calculation
+    if (period === 'PM' && hours < 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+    
+    // Add 1 hour
+    hours = (hours + 1) % 24;
+    
+    // Convert back to 12-hour format
+    let endPeriod = 'AM';
+    if (hours >= 12) {
+        endPeriod = 'PM';
+        hours = hours % 12;
+    }
+    if (hours === 0) hours = 12;
+    
+    return `${hours}:${minutes} ${endPeriod}`;
+}
+
+// Function to update the price summary based on selected spot type
+function updatePriceSummary(slotType) {
+    let hourlyRate = 30; // Default rate
+    
+    if (slotType === 'Premium') {
+        hourlyRate = 50; // Higher rate for premium spots
+    }
+    
+    // Update the price in the UI
+    const priceElements = document.querySelectorAll('.price-row div:last-child');
+    if (priceElements.length >= 3) {
+        priceElements[0].textContent = `₹${hourlyRate}`;
+        
+        const convenienceFee = 5;
+        const gst = (hourlyRate + convenienceFee) * 0.18;
+        const total = hourlyRate + convenienceFee + gst;
+        
+        priceElements[2].textContent = `₹${gst.toFixed(1)}`;
+        
+        const totalElement = document.getElementById('total-price');
+        if (totalElement) {
+            totalElement.textContent = `₹${total.toFixed(1)}`;
+        }
+        
+        // Update the hourly rate text
+        const rateTextElement = document.querySelector('.price-row:first-child div:first-child');
+        if (rateTextElement) {
+            rateTextElement.textContent = `Parking Fee (1 hour @ ₹${hourlyRate}/hour)`;
+        }
+    }
+}
+
+// Initialize parking interface on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeParkingInterface();
+});
+</script>
+</body>
+</html>
